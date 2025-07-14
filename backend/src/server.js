@@ -39,6 +39,7 @@ app.use("/api/friends", friendRoutes);
 // ✅ Serve frontend in production
 if (process.env.NODE_ENV === "production") {
   const staticPath = path.resolve(__dirname, "../../frontend/dist");
+    console.log("STATIC PATH:", staticPath);
   app.use(express.static(staticPath));
 
   app.get("*", (req, res) => {

@@ -12,14 +12,14 @@ import chatRoutes from "./routes/chat.route.js";
 import friendRoutes from "./routes/friend.route.js";
 import { connectDB } from "./lib/db.js";
 
-// Fix __dirname for ES Modules
+// Setup __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect DB
+// Connect to DB
 connectDB();
 
 // Middleware
@@ -36,16 +36,15 @@ app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/friends", friendRoutes);
 
-// ✅ Serve frontend in production
+// ✅ Serve Frontend in Production
 if (process.env.NODE_ENV === "production") {
-  const staticPath = path.resolve(__dirname, "../../frontend/dist"); // ✅ go up 2 levels from src/
+  const staticPath = path.resolve(__dirname, "../../frontend/dist"); // ✅ relative to backend/src/
   app.use(express.static(staticPath));
 
   app.get("*", (req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 } else {
-  // Dev fallback
   app.get("/", (req, res) => {
     res.send("🚀 API is running");
   });

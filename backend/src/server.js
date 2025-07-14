@@ -5,23 +5,21 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Import routes
+// Routes & DB
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import chatRoutes from "./routes/chat.route.js";
 import friendRoutes from "./routes/friend.route.js";
-
-// Import DB connection
 import { connectDB } from "./lib/db.js";
 
-// Setup __dirname for ES modules
+// Fix __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
+// Connect DB
 connectDB();
 
 // Middleware
@@ -32,29 +30,29 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// API Routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/friends", friendRoutes);
 
-// Serve frontend in production
+// 🧠 Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  const staticPath = path.join(__dirname, "../frontend/dist");
+  const staticPath = path.resolve(__dirname, "../../frontend/dist"); // <- go up two levels!
   app.use(express.static(staticPath));
 
   app.get("*", (req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 } else {
-  // Development health check route
   app.get("/", (req, res) => {
     res.send("🚀 API is running");
   });
 }
 
-// Start server
+// Start Server
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
+
 

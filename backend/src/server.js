@@ -30,21 +30,22 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/friends", friendRoutes);
 
-// 🧠 Serve frontend in production
+// ✅ Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  const staticPath = path.resolve(__dirname, "../frontend/dist"); // ✅ only go up one level from src/
+  const staticPath = path.resolve(__dirname, "../../frontend/dist"); // ✅ go up 2 levels from src/
   app.use(express.static(staticPath));
 
   app.get("*", (req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 } else {
+  // Dev fallback
   app.get("/", (req, res) => {
     res.send("🚀 API is running");
   });
@@ -54,5 +55,6 @@ if (process.env.NODE_ENV === "production") {
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
 });
+
 
 

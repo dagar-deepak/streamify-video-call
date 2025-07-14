@@ -13,6 +13,7 @@ import { connectDB } from "./lib/db.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Fix __dirname for ESM
 const __dirname = path.resolve();
 
 // CORS
@@ -31,9 +32,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
-// Production frontend serving
+// ✅ Correct Production Build Path
 if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "../frontend/dist");
+  const distPath = path.resolve(__dirname, "../../../frontend/dist");
+
   app.use(express.static(distPath));
   app.use("/assets", express.static(path.join(distPath, "assets")));
 
@@ -46,4 +48,5 @@ app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
   connectDB();
 });
+
 
